@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:version_migration/version.dart';
 
 class VersionMigration {
-  static String _lastMigratedVersionKey = "Migrator.lastMigratedVersionKey";
-  static String _lastUpdatedAppVersionKey = "Migrator.lastUpdatedAppVersionKey";
+  static const String _lastMigratedVersionKey =
+      "Migrator.lastMigratedVersionKey";
+  static const String _lastUpdatedAppVersionKey =
+      "Migrator.lastUpdatedAppVersionKey";
 
   /// Migrate to version [version] executing the function [migrationFunction]
   static Future<bool> migrateToVersion(
@@ -37,8 +39,18 @@ class VersionMigration {
 
   /// Reset in shared preferences the last migrated version and last updated app version
   static reset() {
-    _setLastMigratedVersion(null);
-    _setLastUpdatedAppVersion(null);
+    _resetLastMigratedVersion();
+    _resetLastUpdatedAppVersion();
+  }
+
+  static Future<bool> _resetLastMigratedVersion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(_lastMigratedVersionKey);
+  }
+
+  static Future<bool> _resetLastUpdatedAppVersion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(_lastUpdatedAppVersionKey);
   }
 
   static Future<Version> _getLastMigratedVersion() async {
